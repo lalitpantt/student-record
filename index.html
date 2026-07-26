@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Record Manager</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+        <div>
+          <h1>Student</h1>
+          <span>Record Manager</span>
+        </div>
+      </div>
+      <nav class="nav-menu">
+        <button class="nav-item active" data-page="dashboard">Dashboard</button>
+        <button class="nav-item" data-page="students">Students</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="footer-btn">Settings</button>
+        <button class="footer-btn">Log out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section id="dashboardSection">
+        <header class="top-bar">
+          <div>
+            <h2>Dashboard</h2>
+            <p>Overview of student records</p>
+          </div>
+          <button id="addStudentBtn" class="primary-btn openAddStudent">+ Add Student</button>
+        </header>
+
+        <section class="stats-grid">
+          <article class="stat-card">
+            <small>Total Students</small>
+            <strong id="totalStudents">0</strong>
+          </article>
+          <article class="stat-card">
+            <small>Departments</small>
+            <strong id="departmentsCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <small>Top Performers</small>
+            <strong id="topPerformersCount">0</strong>
+          </article>
+        </section>
+
+        <section class="recent-students">
+          <h3>Recent Students</h3>
+          <div id="emptyDashboardState" class="empty-state">
+            <div class="empty-icon">👤</div>
+            <p>No students found</p>
+            <span>Add a new student to get started</span>
+          </div>
+        </section>
+      </section>
+
+      <section id="studentsSection" class="students-section hidden">
+        <div class="students-topbar">
+          <div>
+            <h2>Students</h2>
+            <p id="studentSummary">0 total students</p>
+          </div>
+          <div class="students-actions">
+            <div class="search-wrapper">
+              <span class="search-icon">🔍</span>
+              <input id="searchInput" type="search" placeholder="Search students..." />
+            </div>
+            <button class="primary-btn openAddStudent">+ Add Student</button>
+          </div>
+        </div>
+
+        <div id="studentTableWrapper" class="table-wrapper hidden">
+          <table id="studentTable">
+            <thead>
+              <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Year</th>
+                <th>CGPA</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div id="emptyStudentState" class="empty-state hidden">
+          <div class="empty-icon">👤</div>
+          <p>No students found</p>
+          <span>Use the add button to create a new record</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalOverlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Student</h3>
+        <button id="closeModal" class="close-btn">✕</button>
+      </div>
+      <form id="studentForm" class="student-form">
+        <div class="form-grid">
+          <label>
+            Full Name *
+            <input id="studentName" type="text" required placeholder="John Doe" />
+          </label>
+          <label>
+            Roll Number *
+            <input id="studentRoll" type="text" required placeholder="CS2024001" />
+          </label>
+          <label>
+            Email *
+            <input id="studentEmail" type="email" required placeholder="john@example.com" />
+          </label>
+          <label>
+            Phone
+            <input id="studentPhone" type="tel" placeholder="+91 98765 43210" />
+          </label>
+          <label>
+            Department *
+            <select id="studentDept" required>
+              <option value="">Select department</option>
+              <option>Computer Science</option>
+              <option>Engineering</option>
+              <option>Mathematics</option>
+              <option>Business</option>
+            </select>
+          </label>
+          <label>
+            Gender
+            <select id="studentGender">
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>
+            Year
+            <input id="studentYear" type="number" min="1" max="5" value="1" />
+          </label>
+          <label>
+            CGPA
+            <input id="studentGpa" type="number" step="0.01" min="0" max="10" placeholder="8.2" />
+          </label>
+          <label>
+            Date of Birth
+            <input id="studentDob" type="date" />
+          </label>
+          <label>
+            Father Name
+            <input id="studentFather" type="text" placeholder="Mr. Kumar" />
+          </label>
+          <label>
+            Father Phone
+            <input id="studentFatherPhone" type="tel" placeholder="+91 99876 54321" />
+          </label>
+          <label>
+            Address
+            <textarea id="studentAddress" placeholder="123 Main Street, City, State"></textarea>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="cancelModal" class="secondary-btn">Cancel</button>
+          <button type="submit" class="primary-btn">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="detailsModalOverlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Student Details</h3>
+        <button id="closeDetailsModal" class="close-btn">✕</button>
+      </div>
+      <div class="details-grid">
+        <div class="details-row">
+          <span class="detail-label">Roll Number</span>
+          <strong id="detailRoll"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Name</span>
+          <strong id="detailName"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Email</span>
+          <strong id="detailEmail"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Phone</span>
+          <strong id="detailPhone"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Department</span>
+          <strong id="detailDepartment"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Year</span>
+          <strong id="detailYear"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">CGPA</span>
+          <strong id="detailGpa"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Gender</span>
+          <strong id="detailGender"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Date of Birth</span>
+          <strong id="detailDob"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Father</span>
+          <strong id="detailFather"></strong>
+        </div>
+        <div class="details-row">
+          <span class="detail-label">Father Phone</span>
+          <strong id="detailFatherPhone"></strong>
+        </div>
+        <div class="details-row details-address">
+          <span class="detail-label">Address</span>
+          <strong id="detailAddress"></strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
